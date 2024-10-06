@@ -30,6 +30,7 @@ class CreateProfileTaskPanel():
         App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
 
         App.ActiveDocument.commitTransaction()
+        App.ActiveDocument.recompute()
 
         return True
 
