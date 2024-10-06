@@ -13,7 +13,7 @@ class FrameForge(Gui.Workbench):
     MenuText = translate("frameforge", "FrameForge")
     ToolTip = translate("frameforge", "a simple FrameForge")
     Icon = os.path.join(ICONPATH, "metalwb.svg")
-    toolbox = ["CreateProfiles"]
+    toolbox = ["FrameForge_CreateProfiles"]
 
     def GetClassName(self):
         return "Gui::PythonWorkbench"
