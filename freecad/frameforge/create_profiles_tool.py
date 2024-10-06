@@ -1,15 +1,22 @@
 import os
+
+from PySide import QtCore, QtGui
+
 import FreeCADGui as Gui
 import FreeCAD as App
 
 from freecad.frameforge.translate_utils import translate
-from freecad.frameforge import ICONPATH, UIPATH
+from freecad.frameforge import WAREHOUSEPATH, ICONPATH, UIPATH
 
 class CreateProfileTaskPanel():
     def __init__(self):
         ui_file = os.path.join(UIPATH, "create_profiles.ui")
         self.form = Gui.PySideUic.loadUi(ui_file)
 
+        self.initialize_ui()
+
+    def initialize_ui(self):
+        self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(WAREHOUSEPATH, "Warehouse.png")))
 
 
     def open(self):

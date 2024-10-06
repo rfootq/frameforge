@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>401</width>
+    <width>362</width>
     <height>744</height>
    </rect>
   </property>
@@ -49,7 +49,17 @@
        </widget>
       </item>
       <item row="3" column="0" colspan="2">
-       <widget class="QGraphicsView" name="graphics_view"/>
+       <widget class="QLabel" name="label_image">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>160</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
