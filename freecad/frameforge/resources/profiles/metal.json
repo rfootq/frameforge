@@ -2,6 +2,7 @@
     "Equal Leg Angles": {
         "norm": "EN 10056-1",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "250x250x35",
@@ -611,6 +612,7 @@
     "Unequal Leg Angles": {
         "norm": "EN 10056-1",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "250x150x15",
@@ -1031,6 +1033,7 @@
     "Flat Sections": {
         "norm": "EN10025",
         "unit": "Metric Units",
+        "fillet": false,
         "sizes": [
             {
                 "Size": "10x3",
@@ -2399,6 +2402,7 @@
     "Square": {
         "norm": "EN",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "6x6",
@@ -2549,6 +2553,7 @@
     "Square Hollow": {
         "norm": "EN10210/10219",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "10x1.0",
@@ -3905,6 +3910,7 @@
     "Rectangular Hollow": {
         "norm": "EN 10210/10219",
         "unit": "Metric Units ",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "30x10x1.5",
@@ -5387,6 +5393,7 @@
     "UPE": {
         "norm": "EN24-62 DIN1025",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "80",
@@ -5533,6 +5540,7 @@
     "UPN": {
         "norm": "EN24-62 DIN1025",
         "unit": "Metric Units ",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "50x25",
@@ -5709,6 +5717,7 @@
     "HEA": {
         "norm": "EN53-62 DIN1025",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "100",
@@ -5931,6 +5940,7 @@
     "HEB": {
         "norm": "EN53-62 DIN1025",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "100",
@@ -6153,6 +6163,7 @@
     "HEM": {
         "norm": "EN53-62 DIN1025",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "100",
@@ -6375,6 +6386,7 @@
     "IPE": {
         "norm": "EN 19-57 DIN 1025",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "80",
@@ -6543,6 +6555,7 @@
     "IPN": {
         "norm": "EN24-62 DIN1026",
         "unit": "Metric Units",
+        "fillet": true,
         "sizes": [
             {
                 "Size": "80",
@@ -6786,9 +6799,10 @@
             }
         ]
     },
-    "Round bar": {
+    "Round Bar": {
         "norm": "NFA 45003",
         "unit": "Metric Unit",
+        "fillet": false,
         "sizes": [
             {
                 "Size": "5.5",
@@ -7145,6 +7159,7 @@
     "Pipe": {
         "norm": "NFA A 49.115/145",
         "unit": "Metric Unit",
+        "fillet": false,
         "sizes": [
             {
                 "Size": "8x13 1/4",
