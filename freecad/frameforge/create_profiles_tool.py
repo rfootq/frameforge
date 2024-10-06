@@ -29,10 +29,22 @@ class CreateProfileTaskPanel():
     def accept(self):
         App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
 
+        self.proceed()
+
         App.ActiveDocument.commitTransaction()
         App.ActiveDocument.recompute()
 
         return True
+
+
+    def proceed(self):
+        doc = App.ActiveDocument
+
+        box = doc.addObject("Part::Box", "myBox")
+
+        box.Height = 50
+        box.Width = 60
+        box.Length = 30
 
 
 
