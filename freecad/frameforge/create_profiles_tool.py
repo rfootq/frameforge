@@ -119,12 +119,12 @@ class CreateProfileTaskPanel():
             img_name += "_Fillet"
         img_name += ".png"
 
-        App.Console.PrintMessage(translate("frameforge", os.path.join(PROFILEIMAGES_PATH, material, img_name) + "\n"))
         self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
 
 
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
+        self.update_selection()
 
         App.ActiveDocument.openTransaction("Add Profile")
 
@@ -132,6 +132,7 @@ class CreateProfileTaskPanel():
     def reject(self):
         App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
 
+        self.clean()
         App.ActiveDocument.abortTransaction()
 
         return True
@@ -141,11 +142,16 @@ class CreateProfileTaskPanel():
         App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
 
         self.proceed()
+        self.clean()
 
         App.ActiveDocument.commitTransaction()
         App.ActiveDocument.recompute()
 
         return True
+
+    def clean(self):
+        Gui.Selection.removeObserver(self)
+        Gui.Selection.removeSelectionGate()
 
 
     def proceed(self):
@@ -156,6 +162,32 @@ class CreateProfileTaskPanel():
         box.Height = 50
         box.Width = 60
         box.Length = 30
+
+
+    def addSelection(self, doc, obj, sub, other):
+        self.update_selection()
+
+    def clearSelection(self, other):
+        self.update_selection()
+
+    def update_selection(self):
+        """
+        objet sélectionné -> 1 de la liste
+        edge -> sous-élément de l'objet
+        """
+        obj_name = ''
+        for sel in Gui.Selection.getSelectionEx():
+            selected_obj_name = sel.ObjectName
+            subs = ''
+            for sub in sel.SubElementNames:
+                subs += '{},'.format(sub)
+
+            obj_name += selected_obj_name 
+            obj_name += " / "
+            obj_name += subs
+            obj_name += '\n'
+
+        self.form.label_attach.setText(obj_name)
 
 
 
@@ -171,9 +203,13 @@ class CreateProfilesCommand():
 
     def Activated(self):
         """Do something here"""
-
         panel = CreateProfileTaskPanel()
+
+        Gui.Selection.addObserver(panel)
+        Gui.Selection.addSelectionGate('SELECT Part::Feature SUBELEMENT Edge')
+
         Gui.Control.showDialog(panel)
+
 
     def IsActive(self):
         """Here you can define if the command must be active or not (greyed) if certain conditions
