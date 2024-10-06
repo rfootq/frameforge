@@ -2,7 +2,9 @@ import os
 
 RESSOURCESPATH = os.path.join(os.path.dirname(__file__), "resources")
 
+PROFILESPATH = os.path.join(RESSOURCESPATH, "profiles")
+
 ICONPATH = os.path.join(RESSOURCESPATH, "icons")
-WAREHOUSEPATH = os.path.join(RESSOURCESPATH, "images", "warehouse")
+PROFILEIMAGES_PATH = os.path.join(RESSOURCESPATH, "images", "profiles")
 UIPATH = os.path.join(RESSOURCESPATH, "ui")
 TRANSLATIONSPATH = os.path.join(RESSOURCESPATH, "translations")

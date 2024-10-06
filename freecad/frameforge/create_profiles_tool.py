@@ -1,4 +1,5 @@
-import os
+import os, glob
+import json
 
 from PySide import QtCore, QtGui
 
@@ -6,18 +7,50 @@ import FreeCADGui as Gui
 import FreeCAD as App
 
 from freecad.frameforge.translate_utils import translate
-from freecad.frameforge import WAREHOUSEPATH, ICONPATH, UIPATH
+from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
 class CreateProfileTaskPanel():
     def __init__(self):
         ui_file = os.path.join(UIPATH, "create_profiles.ui")
         self.form = Gui.PySideUic.loadUi(ui_file)
 
+        self.load_data()
         self.initialize_ui()
 
-    def initialize_ui(self):
-        self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(WAREHOUSEPATH, "Warehouse.png")))
 
+    def load_data(self):
+        self.profiles = {}
+
+        files = [f for f in os.listdir(PROFILESPATH) if f.endswith('.json')]
+
+        for f in files:
+            material_name = os.path.splitext(f)[0].capitalize()
+
+            with open(os.path.join(PROFILESPATH, f)) as fd:
+                self.profiles[material_name] = json.load(fd)
+
+
+    def initialize_ui(self):
+        self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, "Warehouse.png")))
+
+        self.form.combo_material.currentIndexChanged.connect(self.on_material_changed)
+        self.form.combo_family.currentIndexChanged.connect(self.on_family_changed)
+        self.form.combo_size.currentIndexChanged.connect(self.on_size_changed)
+
+        self.form.combo_material.addItems([k for k in self.profiles])
+
+
+    def on_material_changed(self, index):
+        material = str(self.form.combo_material.currentText())
+
+        self.form.combo_family.clear()
+        self.form.combo_family.addItems([f for f in self.profiles[material]])
+
+    def on_family_changed(self, index):
+        pass
+
+    def on_size_changed(self, index):
+        pass
 
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
@@ -52,6 +85,7 @@ class CreateProfileTaskPanel():
         box.Height = 50
         box.Width = 60
         box.Length = 30
+
 
 
 
