@@ -57,6 +57,12 @@ class CreateProfileTaskPanel():
         self.form.cb_make_fillet.setEnabled(self.profiles[material][family]['fillet'])
 
         self.update_image()
+
+        self.form.label_norm.setText(self.profiles[material][family]['norm'])
+        self.form.label_unit.setText(self.profiles[material][family]['unit'])
+
+        self.form.combo_size.clear()
+        self.form.combo_size.addItems([d['Size'] for d in self.profiles[material][family]['sizes']])
         
 
     def on_size_changed(self, index):
