@@ -68,5 +68,5 @@ def QT_TRANSLATE_NOOP(context, text):
     return text
 
 def translate(context, text):
-    return text
+    return text + "\n"
 

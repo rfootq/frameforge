@@ -13,14 +13,25 @@ class CreateProfileTaskPanel():
 
 
     def open(self):
-        App.Console.PrintMessage(translate(
-            "frameforge",
-            "Opening CreateProfile") + "\n")
+        App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile"))
+
+        App.ActiveDocument.openTransaction("Add Profile")
+
+
+    def reject(self):
+        App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile"))
+
+        App.ActiveDocument.abortTransaction()
+
+        return True
+
 
     def accept(self):
-        App.Console.PrintMessage(translate(
-            "frameforge",
-            "Accepting CreateProfile") + "\n")
+        App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile"))
+
+        App.ActiveDocument.commitTransaction()
+
+        return True
 
 
 
@@ -42,6 +53,6 @@ class CreateProfilesCommand():
     def IsActive(self):
         """Here you can define if the command must be active or not (greyed) if certain conditions
         are met or not. This function is optional."""
-        return True
+        return App.ActiveDocument is not None
 
 Gui.addCommand("FrameForge_CreateProfiles", CreateProfilesCommand())
