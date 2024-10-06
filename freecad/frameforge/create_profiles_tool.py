@@ -62,11 +62,47 @@ class CreateProfileTaskPanel():
         self.form.label_unit.setText(self.profiles[material][family]['unit'])
 
         self.form.combo_size.clear()
-        self.form.combo_size.addItems([d['Size'] for d in self.profiles[material][family]['sizes']])
+        self.form.combo_size.addItems([s for s in self.profiles[material][family]['sizes']])
         
 
     def on_size_changed(self, index):
-        pass
+        material = str(self.form.combo_material.currentText())
+        family = str(self.form.combo_family.currentText())
+        size = str(self.form.combo_size.currentText())
+
+        if size != '':
+            profile  = self.profiles[material][family]['sizes'][size]
+
+            SETTING_MAP = {
+                "Height": self.form.sb_height,
+                "Width": self.form.sb_width,
+                "Thickness": self.form.sb_main_thickness,
+                "Flange Thickness": self.form.sb_flange_thickness,
+                "Radius1": self.form.sb_radius1,
+                "Radius2": self.form.sb_radius2,
+                "Weight": self.form.sb_weight
+            }
+
+            self.form.sb_height.setEnabled(False)
+            self.form.sb_width.setEnabled(False)
+            self.form.sb_main_thickness.setEnabled(False)
+            self.form.sb_flange_thickness.setEnabled(False)
+            self.form.sb_radius1.setEnabled(False)
+            self.form.sb_radius2.setEnabled(False)
+            self.form.sb_weight.setEnabled(False)
+
+            for s in profile:
+                if s == "Size":
+                    continue
+
+                if s not in SETTING_MAP:
+                    raise ValueError('Setting Unkown')
+
+                sb = SETTING_MAP[s]
+                sb.setEnabled(True)
+
+                sb.setValue(float(profile[s]))
+
 
 
     def on_cb_make_fillet_changed(self, state):
@@ -75,14 +111,16 @@ class CreateProfileTaskPanel():
 
 
     def update_image(self):
+        material = str(self.form.combo_material.currentText())
         family = str(self.form.combo_family.currentText())
 
         img_name = family.replace(' ', "_")
         if self.form.cb_make_fillet.isChecked():
             img_name += "_Fillet"
         img_name += ".png"
-        App.Console.PrintMessage(translate("frameforge", img_name + "\n"))
-        self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, img_name)))
+
+        App.Console.PrintMessage(translate("frameforge", os.path.join(PROFILEIMAGES_PATH, material, img_name) + "\n"))
+        self.form.label_image.setPixmap(QtGui.QPixmap(os.path.join(PROFILEIMAGES_PATH, material, img_name)))
 
 
     def open(self):
