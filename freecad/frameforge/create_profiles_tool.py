@@ -13,13 +13,13 @@ class CreateProfileTaskPanel():
 
 
     def open(self):
-        App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile"))
+        App.Console.PrintMessage(translate("frameforge", "Opening CreateProfile\n"))
 
         App.ActiveDocument.openTransaction("Add Profile")
 
 
     def reject(self):
-        App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile"))
+        App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
 
         App.ActiveDocument.abortTransaction()
 
@@ -27,7 +27,7 @@ class CreateProfileTaskPanel():
 
 
     def accept(self):
-        App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile"))
+        App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
 
         App.ActiveDocument.commitTransaction()
 
