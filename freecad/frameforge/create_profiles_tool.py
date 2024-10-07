@@ -180,12 +180,11 @@ class CreateProfileTaskPanel():
         # Tuple assignment for edge
         feature = sketch.Object
         link_sub = (feature, (edge))
-        # link_sub = (feature, (selected_obj.SubElementNames[indent]))
         obj.MapMode = "NormalToEdge"
 
         try:
             obj.AttachmentSupport = (feature, edge)
-        except AttributeError:
+        except AttributeError: # for Freecad <= 0.21 support
             obj.Support = (feature, edge)
 
         if not self.form.cb_reverse_attachment.isChecked():
