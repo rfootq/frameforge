@@ -14,21 +14,17 @@ from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPAT
 
 
 
-class Corner:
+class TrimmedProfile:
     def __init__(self, obj):
-        ''' Add some custom properties to our box feature '''
-        obj.addProperty("App::PropertyLink","TrimmedBody","Corner", QT_TRANSLATE_NOOP("App::Property", "Body to be trimmed")).TrimmedBody=None
-        obj.addProperty("App::PropertyLinkSubList","TrimmingBoundary","Corner", QT_TRANSLATE_NOOP("App::Property", "Bodies that define boundaries")).TrimmingBoundary=None
-        #corner_types = ["End Trim", "End Miter", "End Butt1", "End Butt2",]
-        corner_types = ["End Trim", "End Miter",]
-        obj.addProperty("App::PropertyEnumeration","CornerType","Corner", QT_TRANSLATE_NOOP("App::Property", "Corner Type")).CornerType=corner_types
-        cut_types = ["Coped cut", "Simple cut",]
-        obj.addProperty("App::PropertyEnumeration","CutType","Corner", QT_TRANSLATE_NOOP("App::Property", "Cut Type")).CutType=cut_types
+        obj.addProperty("App::PropertyLink","TrimmedBody","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "Body to be trimmed")).TrimmedBody = None
+        obj.addProperty("App::PropertyLinkSubList","TrimmingBoundary","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "Bodies that define boundaries")).TrimmingBoundary = None
+        
+        obj.addProperty("App::PropertyEnumeration","TrimmedProfileType","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "TrimmedProfile Type")).TrimmedProfileType = ["End Trim", "End Miter"]
+        obj.addProperty("App::PropertyEnumeration","CutType","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "Cut Type")).CutType = ["Coped cut", "Simple cut",]
+
         obj.Proxy = self
 
     def onChanged(self, fp, prop):
-        ''' Print the name of the property that has changed '''
-        #App.Console.PrintMessage("Change property: " + str(prop) + "\n")
         pass
 
     def execute(self, fp):
@@ -42,7 +38,7 @@ class Corner:
         
         cut_shapes = []
         
-        if fp.CornerType == "End Trim":
+        if fp.TrimmedProfileType == "End Trim":
             if fp.CutType == "Coped cut":
                 shapes = [x[0].Shape for x in fp.TrimmingBoundary]
                 shps = BOPTools.SplitAPI.slice(fp.TrimmedBody.Shape, shapes, mode="Split")
@@ -63,7 +59,7 @@ class Corner:
                             shp = self.getOutsideCV(face, fp.TrimmedBody.Shape)
                             cut_shapes.append(shp)
         
-        elif fp.CornerType == "End Miter":
+        elif fp.TrimmedProfileType == "End Miter":
             doc = App.activeDocument()
             precision = 0.001
             target1 = self.getTarget(fp.TrimmedBody)
@@ -137,11 +133,11 @@ class Corner:
         while True:
             if hasattr(link, "Target" ):
                 return link.Target
-            elif hasattr(link, "CornerType"):
+            elif hasattr(link, "TrimmedProfileType"):
                 link = link.TrimmedBody
         
 
-class ViewProviderCorner:
+class ViewProviderTrimmedProfile:
     def __init__(self, obj):
         ''' Set this object to the proxy object of the actual view provider '''
         obj.Proxy = self
@@ -241,7 +237,7 @@ class ViewProviderCorner:
         if mode != 0:
             return None
 
-        taskd = CornerTaskPanel(self.Object, mode="edition")
+        taskd = TrimmedProfileTaskPanel(self.Object, mode="edition")
         Gui.Control.showDialog(taskd)
         return True
 
