@@ -9,6 +9,8 @@ import FreeCAD as App
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
+from freecad.frameforge.profile import Profile
+
 class CreateProfileTaskPanel():
     def __init__(self):
         ui_file = os.path.join(UIPATH, "create_profiles.ui")
@@ -155,13 +157,64 @@ class CreateProfileTaskPanel():
 
 
     def proceed(self):
-        doc = App.ActiveDocument
+        selection_list = Gui.Selection.getSelectionEx()
+        for sketch in selection_list:
+            edges = sketch.SubElementNames
+            for i, edge in enumerate(edges):
+                name = f"Profile_{self.form.combo_family.currentText().replace(" ", "_")}_{self.form.combo_size.currentText() if self.form.cb_size_in_name.isChecked() else ""}"
 
-        box = doc.addObject("Part::Box", "myBox")
+                self.make_profile(sketch, edge, name)
+        
 
-        box.Height = 50
-        box.Width = 60
-        box.Length = 30
+    def make_profile(self, sketch, edge, name):
+        # Create an object in current document
+        obj = App.ActiveDocument.addObject("Part::FeaturePython", name)
+        obj.addExtension("Part::AttachExtensionPython")
+
+        # Create a ViewObject in current GUI
+        obj.ViewObject.Proxy = 0
+        view_obj = Gui.ActiveDocument.getObject(obj.Name)
+        view_obj.DisplayMode = "Flat Lines"
+
+
+        # Tuple assignment for edge
+        feature = sketch.Object
+        link_sub = (feature, (edge))
+        # link_sub = (feature, (selected_obj.SubElementNames[indent]))
+        obj.MapMode = "NormalToEdge"
+
+        try:
+            obj.AttachmentSupport = (feature, edge)
+        except AttributeError:
+            obj.Support = (feature, edge)
+
+        if not self.form.cb_reverse_attachment.isChecked():
+            #print("Not reverse attachment")
+            obj.MapPathParameter = 1
+        else:
+            #print("Reverse attachment")
+            obj.MapPathParameter = 0
+            obj.MapReversed = True
+
+
+        Profile(
+            obj,
+            self.form.sb_width.value(),
+            self.form.sb_height.value(),
+            self.form.sb_main_thickness.value(),
+            self.form.sb_flange_thickness.value(),
+            self.form.sb_radius1.value(),
+            self.form.sb_radius2.value(),
+            self.form.sb_length.value(),
+            self.form.sb_weight.value(),
+            self.form.cb_make_fillet.isChecked(), # and self.form.family.currentText() not in ["Flat Sections", "Square", "Round Bar"],
+            self.form.cb_height_centered.isChecked(),
+            self.form.cb_width_centered.isChecked(),
+            self.form.combo_family.currentText(),
+            self.form.cb_combined_bevel.isChecked(),
+            link_sub
+        )
+
 
 
     def addSelection(self, doc, obj, sub, other):
@@ -171,10 +224,6 @@ class CreateProfileTaskPanel():
         self.update_selection()
 
     def update_selection(self):
-        """
-        objet sélectionné -> 1 de la liste
-        edge -> sous-élément de l'objet
-        """
         obj_name = ''
         for sel in Gui.Selection.getSelectionEx():
             selected_obj_name = sel.ObjectName
