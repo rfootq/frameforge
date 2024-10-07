@@ -1,0 +1,25 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>icons/box.svg</file>
+    <file>icons/corner.svg</file>
+    <file>icons/corner-coped-type.svg</file>
+    <file>icons/corner-end-miter.svg</file>
+    <file>icons/corner-end-trim.svg</file>
+    <file>icons/corner-simple-type.svg</file>
+    <file>icons/discretize.svg</file>
+    <file>icons/extendcurve.svg</file>
+    <file>icons/joincurve.svg</file>
+    <file>icons/line.svg</file>
+    <file>icons/list-add.svg</file>
+    <file>icons/list-remove.svg</file>
+    <file>icons/metalwb.svg</file>
+    <file>icons/overlap.svg</file>
+    <file>icons/parts_list.svg</file>
+    <file>icons/splitcurve.svg</file>
+    <file>icons/trim_extend.svg</file>
+    <file>icons/warehouse_profiles.svg</file>
+  </qresource>
+  <qresource prefix="images">
+    <file>images/profiles/Warehouse.png</file>
+  </qresource>
+</RCC>
