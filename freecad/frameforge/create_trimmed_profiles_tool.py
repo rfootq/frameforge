@@ -14,19 +14,37 @@ from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPAT
 
 
 
-class TrimmedProfileTaskPanel():
+class CreateTrimmedProfileTaskPanel():
     def __init__(self):
         ui_file = os.path.join(UIPATH, "create_trimmed_profiles.ui")
         self.form = Gui.PySideUic.loadUi(ui_file)
 
-        # self.initialize_ui()
+        self.initialize_ui()
+
+    def initialize_ui(self):
+        add_icon = QtGui.QIcon(os.path.join(ICONPATH, "list-add.svg"))
+        remove_icon = QtGui.QIcon(os.path.join(ICONPATH, "list-remove.svg"))
+        coped_type_icon = QtGui.QIcon(os.path.join(ICONPATH, "corner-coped-type.svg"))
+        simple_type_icon = QtGui.QIcon(os.path.join(ICONPATH, "corner-simple-type.svg"))
+        
+        QSize = QtCore.QSize(32, 32)
+
+        self.form.rb_copedcut.setIcon(coped_type_icon)
+        self.form.rb_copedcut.setIconSize(QSize)
+
+        self.form.rb_simplecut.setIcon(simple_type_icon)
+        self.form.rb_simplecut.setIconSize(QSize)
+
+        self.form.add_trimmed_object_button.setIcon(add_icon)
+        self.form.add_boundary_button.setIcon(add_icon)
+        self.form.remove_boundary_button.setIcon(remove_icon)
 
 
 
 class TrimProfileCommand():
     def GetResources(self):
         return {
-            "Pixmap": os.path.join(ICONPATH, "corner.svg"),
+            "Pixmap": os.path.join(ICONPATH, "corner-end-trim.svg"),
             "MenuText": translate("MetalWB", "Trim Profile"),
             "Accel": "M, C",
             "ToolTip": translate("MetalWB", "<html><head/><body><p><b>Trim a profile</b> \
@@ -52,7 +70,7 @@ class TrimProfileCommand():
         return False
 
     def Activated(self):
-        panel = TrimmedProfileTaskPanel()
+        panel = CreateTrimmedProfileTaskPanel()
 
         Gui.Control.showDialog(panel)
 
