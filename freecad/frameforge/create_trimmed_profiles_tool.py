@@ -15,9 +15,15 @@ from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPAT
 from freecad.frameforge import trimed_profiles
 
 
+
+
 class CreateTrimmedProfileTaskPanel():
-    def __init__(self):
-        ui_file = os.path.join(UIPATH, "create_trimed_profiles.ui")
+    def __init__(self, fp, mode):
+        self.fp = fp
+        self.dump = fp.dumpContent()
+        self.mode=mode
+
+        ui_file = os.path.join(UIPATH, "create_trimmed_profiles.ui")
         self.form = Gui.PySideUic.loadUi(ui_file)
 
         self.initialize_ui()
@@ -41,6 +47,37 @@ class CreateTrimmedProfileTaskPanel():
         self.form.remove_boundary_button.setIcon(remove_icon)
 
 
+    def open(self):
+        App.Console.PrintMessage(translate("frameforge", "Opening Create Trimed Profile\n"))
+        App.ActiveDocument.openTransaction("Create Trim")
+
+        if self.mode == "creation":
+            sel = Gui.Selection.getSelectionEx()
+            if len(sel) == 0:
+                corner = makeCorner()
+            elif len(sel) == 1:
+                corner = makeCorner(trimmedBody=sel[0].Object)
+            elif len(sel) > 1 :
+                trimmingboundary = []
+                for selectionObject in sel[1:]:
+                    bound = (selectionObject.Object, selectionObject.SubElementNames)
+                    trimmingboundary.append(bound)
+                corner = makeCorner(trimmedBody=sel[0].Object, trimmingBoundary=trimmingboundary)
+
+
+        # App.ActiveDocument.commitTransaction()
+        # App.CornerDialog = CornerTaskPanel(corner, mode="creation")
+        # Gui.Control.showDialog(App.CornerDialog)
+
+
+    def make_trimed_profile(trimmedBody=None, trimmingBoundary=None):
+        doc = App.ActiveDocument
+        corner = doc.addObject("Part::FeaturePython","Corner")
+        Corner(corner)
+        ViewProviderCorner(corner.ViewObject)
+        corner.TrimmedBody = trimmedBody
+        corner.TrimmingBoundary = trimmingBoundary
+        return corner
 
 class TrimProfileCommand():
     def GetResources(self):
