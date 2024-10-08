@@ -12,11 +12,12 @@ import BOPTools.SplitAPI
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
+from freecad.frameforge import trimed_profiles
 
 
 class CreateTrimmedProfileTaskPanel():
     def __init__(self):
-        ui_file = os.path.join(UIPATH, "create_trimmed_profiles.ui")
+        ui_file = os.path.join(UIPATH, "create_trimed_profiles.ui")
         self.form = Gui.PySideUic.loadUi(ui_file)
 
         self.initialize_ui()
