@@ -68,7 +68,6 @@ class CreateTrimmedProfileTaskPanel():
         trimming_boundaries = [e for e in self.fp.TrimmingBoundary]
 
         for selObject in Gui.Selection.getSelectionEx():
-            
             if all([tb != (selObject.Object, tuple(selObject.SubElementNames)) for tb in trimming_boundaries]):
                 trimming_boundaries.append((selObject.Object, tuple(selObject.SubElementNames)))
                 
@@ -85,6 +84,9 @@ class CreateTrimmedProfileTaskPanel():
     def remove_trimming_bodies(self):
         App.Console.PrintMessage(translate("frameforge", "Remove Trimming body\n"))
 
+        selected_tb = [item.data(1) for item in self.form.boundaries_list_widget.selectedItems()]
+        self.fp.TrimmingBoundary = [tb for tb in self.fp.TrimmingBoundary if tb not in selected_tb]
+
         self.update_view_and_model()
 
 
@@ -99,10 +101,9 @@ class CreateTrimmedProfileTaskPanel():
 
         # if self.fp.TrimmingBoundary is not None and len(self.fp.TrimmingBoundary) > 0:
         for bound in self.fp.TrimmingBoundary:
-            item_data = bound[0]
             item = QtGui.QListWidgetItem()
             item.setText("{} ({} {})".format(bound[0].Label, bound[0].Name, ", ".join(bound[1])))
-            item.setData(1, bound[0])
+            item.setData(1, bound)
             self.form.boundaries_list_widget.addItem(item)
 
 
