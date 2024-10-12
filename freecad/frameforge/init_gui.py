@@ -16,8 +16,8 @@ class FrameForge(Gui.Workbench):
 
     toolbox_drawing = [
         "Sketcher_NewSketch",
+        "FrameForge_ParametricLine",
 
-        # "MetalWB_Line",
         # "MetalWB_SplitCurves",
         # "MetalWB_Discretize"
     ]
@@ -50,6 +50,7 @@ class FrameForge(Gui.Workbench):
         This function is called at the first activation of the workbench.
         here is the place to import all the commands
         """
+        from freecad.frameforge import parametric_line
         from freecad.frameforge import create_profiles_tool, create_trimmed_profiles_tool, create_end_miter_tool
 
         # Add translations path
