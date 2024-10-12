@@ -39,9 +39,11 @@ class CreateTrimmedProfileTaskPanel():
 
         self.form.rb_copedcut.setIcon(coped_type_icon)
         self.form.rb_copedcut.setIconSize(QSize)
+        self.form.rb_copedcut.toggled.connect(lambda: self.update_cuttype("Coped cut"))
 
         self.form.rb_simplecut.setIcon(simple_type_icon)
         self.form.rb_simplecut.setIconSize(QSize)
+        self.form.rb_simplecut.toggled.connect(lambda: self.update_cuttype("Simple cut"))
 
         self.form.add_trimmed_object_button.setIcon(add_icon)
         self.form.add_boundary_button.setIcon(add_icon)
@@ -50,6 +52,12 @@ class CreateTrimmedProfileTaskPanel():
         self.form.add_trimmed_object_button.clicked.connect(self.set_trimmed_body)
         self.form.add_boundary_button.clicked.connect(self.add_trimming_bodies)
         self.form.remove_boundary_button.clicked.connect(self.remove_trimming_bodies)
+
+
+    def update_cuttype(self, cuttype):
+        self.fp.CutType = cuttype
+
+        self.update_view_and_model()
 
 
     def set_trimmed_body(self):
@@ -197,6 +205,8 @@ class TrimProfileCommand():
         ViewProviderTrimmedProfile(trimmed_profile.ViewObject)
         trimmed_profile.TrimmedBody = trimmedBody
         trimmed_profile.TrimmingBoundary = trimmingBoundary
+
+        trimmed_profile.TrimmedProfileType = "End Trim"
         
         # doc.recompute()
         return trimmed_profile
