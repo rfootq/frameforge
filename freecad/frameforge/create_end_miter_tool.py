@@ -20,11 +20,11 @@ class CreateEndMiterCommand():
     def GetResources(self):
         return {
             "Pixmap": os.path.join(ICONPATH, "corner-end-miter.svg"),
-            "MenuText": translate("MetalWB", "Trim Profile"),
+            "MenuText": translate("MetalWB", "Create Miter Ends"),
             "Accel": "M, C",
-            "ToolTip": translate("MetalWB", "<html><head/><body><p><b>Trim a profile</b> \
+            "ToolTip": translate("MetalWB", "<html><head/><body><p><b>Create Miter Ends</b> \
                     <br><br> \
-                    Select a profile then another profile's faces. \
+                    Select two profiles. \
                     </p></body></html>"),
         }
 
