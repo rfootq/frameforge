@@ -16,11 +16,11 @@ from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPAT
 
 class TrimmedProfile:
     def __init__(self, obj):
-        obj.addProperty("App::PropertyLink","TrimmedBody","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "Body to be trimmed")).TrimmedBody = None
-        obj.addProperty("App::PropertyLinkSubList","TrimmingBoundary","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "Bodies that define boundaries")).TrimmingBoundary = None
+        obj.addProperty("App::PropertyLink","TrimmedBody","TrimmedProfile", translate("App::Property", "Body to be trimmed")).TrimmedBody = None
+        obj.addProperty("App::PropertyLinkSubList","TrimmingBoundary","TrimmedProfile", translate("App::Property", "Bodies that define boundaries")).TrimmingBoundary = None
         
-        obj.addProperty("App::PropertyEnumeration","TrimmedProfileType","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "TrimmedProfile Type")).TrimmedProfileType = ["End Trim", "End Miter"]
-        obj.addProperty("App::PropertyEnumeration","CutType","TrimmedProfile", QT_TRANSLATE_NOOP("App::Property", "Cut Type")).CutType = ["Coped cut", "Simple cut",]
+        obj.addProperty("App::PropertyEnumeration","TrimmedProfileType","TrimmedProfile", translate("App::Property", "TrimmedProfile Type")).TrimmedProfileType = ["End Trim", "End Miter"]
+        obj.addProperty("App::PropertyEnumeration","CutType","TrimmedProfile", translate("App::Property", "Cut Type")).CutType = ["Coped cut", "Simple cut",]
 
         obj.Proxy = self
 

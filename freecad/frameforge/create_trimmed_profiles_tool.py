@@ -12,21 +12,22 @@ import BOPTools.SplitAPI
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
-from freecad.frameforge import trimed_profiles
+from freecad.frameforge.trimmed_profile import TrimmedProfile, ViewProviderTrimmedProfile
 
 
 
 
 class CreateTrimmedProfileTaskPanel():
     def __init__(self, fp, mode):
-        self.fp = fp
-        self.dump = fp.dumpContent()
-        self.mode=mode
-
         ui_file = os.path.join(UIPATH, "create_trimmed_profiles.ui")
         self.form = Gui.PySideUic.loadUi(ui_file)
 
         self.initialize_ui()
+
+        self.fp = fp
+        self.dump = fp.dumpContent()
+        self.mode=mode
+
 
     def initialize_ui(self):
         add_icon = QtGui.QIcon(os.path.join(ICONPATH, "list-add.svg"))
@@ -46,38 +47,96 @@ class CreateTrimmedProfileTaskPanel():
         self.form.add_boundary_button.setIcon(add_icon)
         self.form.remove_boundary_button.setIcon(remove_icon)
 
+        self.form.add_trimmed_object_button.clicked.connect(self.set_trimmed_body)
+        self.form.add_boundary_button.clicked.connect(self.add_trimming_bodies)
+        self.form.remove_boundary_button.clicked.connect(self.remove_trimming_bodies)
+
+
+    def set_trimmed_body(self):
+        if len(Gui.Selection.getSelectionEx()) == 1:
+            App.Console.PrintMessage(translate("frameforge", f"Set Trimmed body: {Gui.Selection.getSelectionEx()[0].Object.Name}\n"))
+            self.fp.TrimmedBody = Gui.Selection.getSelectionEx()[0].Object
+            
+        self.update_view_and_model()
+
+
+
+    def add_trimming_bodies(self):
+        App.Console.PrintMessage(translate("frameforge", "Add Trimming bodies...\n"))
+        App.Console.PrintMessage(translate("frameforge", f"Existing trimming bodies = {self.fp.TrimmingBoundary}\n"))
+
+        # It looks like the TrimmingBoundary list must be rebuilt, not working if trying to only append data..
+        trimming_boundaries = [e for e in self.fp.TrimmingBoundary]
+
+        for selObject in Gui.Selection.getSelectionEx():
+            App.Console.PrintMessage(translate("frameforge", f"\tadd trimming body: {selObject.ObjectName}, {tuple(selObject.SubElementNames)}\n"))
+            
+            # if all([po != (selObject, tuple(selObject.SubElementNames)) for po in self.fp.TrimmingBoundary]):
+            trimming_boundaries.append((selObject.Object, tuple(selObject.SubElementNames)))
+
+            App.Console.PrintMessage(translate("frameforge", f"Adding... trimming bodies = {trimming_boundaries}\n"))
+
+        self.fp.TrimmingBoundary = trimming_boundaries
+
+        self.update_view_and_model()
+
+    def remove_trimming_bodies(self):
+        App.Console.PrintMessage(translate("frameforge", "Remove Trimming body\n"))
+
+        self.update_view_and_model()
+
+
+
+    def update_view_and_model(self):
+        App.Console.PrintMessage(translate("frameforge", f"updating... {self.fp.TrimmedBody.Name} -> {self.fp.TrimmingBoundary}\n"))
+
+        
+        if self.fp.TrimmedBody is not None:
+            self.form.trimmed_object_label.setText("{} ({})".format(self.fp.TrimmedBody.Label, self.fp.TrimmedBody.Name))
+        else:
+            self.form.trimmed_object_label.setText("Select...")
+
+        self.form.boundaries_list_widget.clear()
+
+        # if self.fp.TrimmingBoundary is not None and len(self.fp.TrimmingBoundary) > 0:
+        for bound in self.fp.TrimmingBoundary:
+            item_data = bound[0]
+            item = QtGui.QListWidgetItem()
+            item.setText("{} ({} {})".format(bound[0].Label, bound[0].Name, ", ".join(bound[1])))
+            item.setData(1, bound[0])
+            self.form.boundaries_list_widget.addItem(item)
+
+
+        self.fp.recompute()
+
 
     def open(self):
         App.Console.PrintMessage(translate("frameforge", "Opening Create Trimed Profile\n"))
-        App.ActiveDocument.openTransaction("Create Trim")
-
-        if self.mode == "creation":
-            sel = Gui.Selection.getSelectionEx()
-            if len(sel) == 0:
-                corner = makeCorner()
-            elif len(sel) == 1:
-                corner = makeCorner(trimmedBody=sel[0].Object)
-            elif len(sel) > 1 :
-                trimmingboundary = []
-                for selectionObject in sel[1:]:
-                    bound = (selectionObject.Object, selectionObject.SubElementNames)
-                    trimmingboundary.append(bound)
-                corner = makeCorner(trimmedBody=sel[0].Object, trimmingBoundary=trimmingboundary)
+        App.ActiveDocument.openTransaction("Update Trim")
 
 
-        # App.ActiveDocument.commitTransaction()
-        # App.CornerDialog = CornerTaskPanel(corner, mode="creation")
-        # Gui.Control.showDialog(App.CornerDialog)
+    def reject(self):
+        App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
+
+        self.clean()
+        App.ActiveDocument.abortTransaction()
+
+        return True
 
 
-    def make_trimed_profile(trimmedBody=None, trimmingBoundary=None):
-        doc = App.ActiveDocument
-        corner = doc.addObject("Part::FeaturePython","Corner")
-        Corner(corner)
-        ViewProviderCorner(corner.ViewObject)
-        corner.TrimmedBody = trimmedBody
-        corner.TrimmingBoundary = trimmingBoundary
-        return corner
+    def accept(self):
+        App.Console.PrintMessage(translate("frameforge", "Accepting Create Trimed Profile\n"))
+
+        self.proceed()
+        self.clean()
+
+        App.ActiveDocument.commitTransaction()
+        App.ActiveDocument.recompute()
+
+        return True
+
+    def clean(self):
+        pass
 
 class TrimProfileCommand():
     def GetResources(self):
@@ -108,9 +167,38 @@ class TrimProfileCommand():
         return False
 
     def Activated(self):
-        panel = CreateTrimmedProfileTaskPanel()
+        # create a TrimmedProfile object
+        sel = Gui.Selection.getSelectionEx()
+        App.ActiveDocument.openTransaction("Make Trimmed Profile")
+        if len(sel) == 0:
+            trimmed_profile = self.make_trimmed_profile()
+        elif len(sel) == 1:
+            trimmed_profile = self.make_trimmed_profile(trimmedBody=sel[0].Object)
+        elif len(sel) > 1 :
+            trimmingboundary = []
+            for selectionObject in sel[1:]:
+                bound = (selectionObject.Object, selectionObject.SubElementNames)
+                trimmingboundary.append(bound)
+            trimmed_profile = self.make_trimmed_profile(trimmedBody=sel[0].Object, trimmingBoundary=trimmingboundary)
+        App.ActiveDocument.commitTransaction()
 
+
+        panel = CreateTrimmedProfileTaskPanel(trimmed_profile, mode="creation")
         Gui.Control.showDialog(panel)
 
+
+
+    def make_trimmed_profile(self, trimmedBody=None, trimmingBoundary=None):
+        doc = App.ActiveDocument
+
+        trimmed_profile = doc.addObject("Part::FeaturePython","TrimmedProfile")
+        TrimmedProfile(trimmed_profile)
+        
+        ViewProviderTrimmedProfile(trimmed_profile.ViewObject)
+        trimmed_profile.TrimmedBody = trimmedBody
+        trimmed_profile.TrimmingBoundary = trimmingBoundary
+        
+        # doc.recompute()
+        return trimmed_profile
 
 Gui.addCommand("FrameForge_TrimProfiles", TrimProfileCommand())
