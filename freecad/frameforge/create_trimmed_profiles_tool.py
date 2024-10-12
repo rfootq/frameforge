@@ -22,12 +22,12 @@ class CreateTrimmedProfileTaskPanel():
         ui_file = os.path.join(UIPATH, "create_trimmed_profiles.ui")
         self.form = Gui.PySideUic.loadUi(ui_file)
 
-        self.initialize_ui()
 
         self.fp = fp
         self.dump = fp.dumpContent()
         self.mode=mode
 
+        self.initialize_ui()
         self.update_view_and_model()
 
 
@@ -46,6 +46,12 @@ class CreateTrimmedProfileTaskPanel():
         self.form.rb_simplecut.setIcon(simple_type_icon)
         self.form.rb_simplecut.setIconSize(QSize)
         self.form.rb_simplecut.toggled.connect(lambda: self.update_cuttype("Simple cut"))
+
+        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+        if param.GetString("Default Cut Type") == "Coped cut":
+            self.form.rb_copedcut.toggle()
+        elif param.GetString("Default Cut Type") == "Simple cut":
+            self.form.rb_simplecut.toggle()
 
         self.form.add_trimmed_object_button.setIcon(add_icon)
         self.form.add_boundary_button.setIcon(add_icon)
@@ -136,6 +142,9 @@ class CreateTrimmedProfileTaskPanel():
 
     def accept(self):
         App.Console.PrintMessage(translate("frameforge", "Accepting Create Trimed Profile\n"))
+
+        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+        param.SetString("Default Cut Type", self.fp.CutType)
 
         self.clean()
 
