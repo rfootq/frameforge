@@ -135,7 +135,6 @@ class CreateTrimmedProfileTaskPanel():
     def accept(self):
         App.Console.PrintMessage(translate("frameforge", "Accepting Create Trimed Profile\n"))
 
-        self.proceed()
         self.clean()
 
         App.ActiveDocument.commitTransaction()
