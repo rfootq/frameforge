@@ -12,7 +12,7 @@ import BOPTools.SplitAPI
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
-
+from freecad.frameforge import create_trimmed_profiles_tool
 
 class TrimmedProfile:
     def __init__(self, obj):
@@ -237,7 +237,7 @@ class ViewProviderTrimmedProfile:
         if mode != 0:
             return None
 
-        taskd = TrimmedProfileTaskPanel(self.Object, mode="edition")
+        taskd = create_trimmed_profiles_tool.CreateTrimmedProfileTaskPanel(self.Object, mode="edition")
         Gui.Control.showDialog(taskd)
         return True
 
