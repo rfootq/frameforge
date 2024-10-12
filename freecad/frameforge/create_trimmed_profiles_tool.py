@@ -28,6 +28,8 @@ class CreateTrimmedProfileTaskPanel():
         self.dump = fp.dumpContent()
         self.mode=mode
 
+        self.update_view_and_model()
+
 
     def initialize_ui(self):
         add_icon = QtGui.QIcon(os.path.join(ICONPATH, "list-add.svg"))
@@ -144,6 +146,10 @@ class CreateTrimmedProfileTaskPanel():
 
     def clean(self):
         pass
+
+
+
+
 
 class TrimProfileCommand():
     def GetResources(self):
