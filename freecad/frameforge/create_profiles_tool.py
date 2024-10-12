@@ -41,8 +41,21 @@ class CreateProfileTaskPanel():
 
         self.form.cb_make_fillet.stateChanged.connect(self.on_cb_make_fillet_changed)
 
-
         self.form.combo_material.addItems([k for k in self.profiles])
+
+
+        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+        default_material_index = self.form.combo_material.findText(param.GetString("Default Profile Material"))
+        if default_material_index > -1:
+            self.form.combo_material.setCurrentIndex(default_material_index)
+
+            default_family_index = self.form.combo_family.findText(param.GetString("Default Profile Family"))
+            if default_family_index > -1:
+                self.form.combo_family.setCurrentIndex(default_family_index)
+
+                default_size_index = self.form.combo_size.findText(param.GetString("Default Profile Size"))
+                if default_size_index > -1:
+                    self.form.combo_size.setCurrentIndex(default_size_index)
 
 
     def on_material_changed(self, index):
@@ -142,6 +155,11 @@ class CreateProfileTaskPanel():
 
     def accept(self):
         App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
+
+        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+        param.SetString("Default Profile Material", self.form.combo_material.currentText())
+        param.SetString("Default Profile Family", self.form.combo_family.currentText())
+        param.SetString("Default Profile Size", self.form.combo_size.currentText())
 
         self.proceed()
         self.clean()
