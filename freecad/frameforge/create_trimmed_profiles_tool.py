@@ -36,7 +36,7 @@ class CreateTrimmedProfileTaskPanel():
         remove_icon = QtGui.QIcon(os.path.join(ICONPATH, "list-remove.svg"))
         coped_type_icon = QtGui.QIcon(os.path.join(ICONPATH, "corner-coped-type.svg"))
         simple_type_icon = QtGui.QIcon(os.path.join(ICONPATH, "corner-simple-type.svg"))
-        
+
         QSize = QtCore.QSize(32, 32)
 
         self.form.rb_copedcut.setIcon(coped_type_icon)
@@ -72,7 +72,7 @@ class CreateTrimmedProfileTaskPanel():
         if len(Gui.Selection.getSelectionEx()) == 1:
             App.Console.PrintMessage(translate("frameforge", f"Set Trimmed body: {Gui.Selection.getSelectionEx()[0].Object.Name}\n"))
             self.fp.TrimmedBody = Gui.Selection.getSelectionEx()[0].Object
-            
+
         self.update_view_and_model()
 
 
@@ -86,7 +86,7 @@ class CreateTrimmedProfileTaskPanel():
         for selObject in Gui.Selection.getSelectionEx():
             if all([tb != (selObject.Object, tuple(selObject.SubElementNames)) for tb in trimming_boundaries]):
                 trimming_boundaries.append((selObject.Object, tuple(selObject.SubElementNames)))
-                
+
                 App.Console.PrintMessage(translate("frameforge", f"\tadd trimming body: {selObject.ObjectName}, {tuple(selObject.SubElementNames)}\n"))
 
             else:
@@ -132,10 +132,24 @@ class CreateTrimmedProfileTaskPanel():
 
 
     def reject(self):
-        App.Console.PrintMessage(translate("frameforge", "Rejecting CreateProfile\n"))
+        App.Console.PrintMessage(translate("frameforge", f"Rejecting CreateProfile {self.mode}\n"))
 
-        self.clean()
-        App.ActiveDocument.abortTransaction()
+        if self.mode == "edition":
+            self.fp.restoreContent(self.dump)
+            Gui.ActiveDocument.resetEdit()
+
+        elif self.mode == "creation":
+            trimmedBody = self.fp.TrimmedBody
+
+            App.ActiveDocument.removeObject(self.fp.Name)
+
+            if trimmedBody:
+                trimmedBody.ViewObject.Visibility = True
+
+        App.ActiveDocument.commitTransaction()
+
+        App.ActiveDocument.recompute()
+        Gui.ActiveDocument.resetEdit()
 
         return True
 
@@ -146,16 +160,13 @@ class CreateTrimmedProfileTaskPanel():
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         param.SetString("Default Cut Type", self.fp.CutType)
 
-        self.clean()
 
         App.ActiveDocument.commitTransaction()
+
         App.ActiveDocument.recompute()
+        Gui.ActiveDocument.resetEdit()
 
         return True
-
-    def clean(self):
-        pass
-
 
 
 
@@ -215,13 +226,13 @@ class TrimProfileCommand():
 
         trimmed_profile = doc.addObject("Part::FeaturePython","TrimmedProfile")
         TrimmedProfile(trimmed_profile)
-        
+
         ViewProviderTrimmedProfile(trimmed_profile.ViewObject)
         trimmed_profile.TrimmedBody = trimmedBody
         trimmed_profile.TrimmingBoundary = trimmingBoundary
 
         trimmed_profile.TrimmedProfileType = "End Trim"
-        
+
         # doc.recompute()
         return trimmed_profile
 
