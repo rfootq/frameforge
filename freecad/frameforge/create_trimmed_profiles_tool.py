@@ -63,18 +63,20 @@ class CreateTrimmedProfileTaskPanel():
 
     def add_trimming_bodies(self):
         App.Console.PrintMessage(translate("frameforge", "Add Trimming bodies...\n"))
-        App.Console.PrintMessage(translate("frameforge", f"Existing trimming bodies = {self.fp.TrimmingBoundary}\n"))
 
         # It looks like the TrimmingBoundary list must be rebuilt, not working if trying to only append data..
         trimming_boundaries = [e for e in self.fp.TrimmingBoundary]
 
         for selObject in Gui.Selection.getSelectionEx():
-            App.Console.PrintMessage(translate("frameforge", f"\tadd trimming body: {selObject.ObjectName}, {tuple(selObject.SubElementNames)}\n"))
             
-            # if all([po != (selObject, tuple(selObject.SubElementNames)) for po in self.fp.TrimmingBoundary]):
-            trimming_boundaries.append((selObject.Object, tuple(selObject.SubElementNames)))
+            if all([tb != (selObject.Object, tuple(selObject.SubElementNames)) for tb in trimming_boundaries]):
+                trimming_boundaries.append((selObject.Object, tuple(selObject.SubElementNames)))
+                
+                App.Console.PrintMessage(translate("frameforge", f"\tadd trimming body: {selObject.ObjectName}, {tuple(selObject.SubElementNames)}\n"))
 
-            App.Console.PrintMessage(translate("frameforge", f"Adding... trimming bodies = {trimming_boundaries}\n"))
+            else:
+                App.Console.PrintMessage(translate("frameforge", "Already a trimming body for this TrimmedBody\n"))
+
 
         self.fp.TrimmingBoundary = trimming_boundaries
 
@@ -88,9 +90,6 @@ class CreateTrimmedProfileTaskPanel():
 
 
     def update_view_and_model(self):
-        App.Console.PrintMessage(translate("frameforge", f"updating... {self.fp.TrimmedBody.Name} -> {self.fp.TrimmingBoundary}\n"))
-
-        
         if self.fp.TrimmedBody is not None:
             self.form.trimmed_object_label.setText("{} ({})".format(self.fp.TrimmedBody.Label, self.fp.TrimmedBody.Name))
         else:
