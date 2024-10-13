@@ -16,30 +16,23 @@ class FrameForge(Gui.Workbench):
 
     toolbox_drawing = [
         "Sketcher_NewSketch",
-        "FrameForge_ParametricLine",
-
-        # "MetalWB_SplitCurves",
-        # "MetalWB_Discretize"
+        "FrameForge_ParametricLine"
     ]
 
     toolbox_frameforge = [
         "FrameForge_CreateProfiles",
         "FrameForge_TrimProfiles",
         "FrameForge_EndMiter"
-
-        # "MetalWB_Trim",
-        # "OverlapDetect",
-        # "MetalWB_Corner",
     ]
 
     toolbox_part = [
         "Part_Fuse",
         "Part_Cut",
 
-        # "PartDesign_Body",
+        "PartDesign_Body",
 
-        # "PartDesign_Pad",
-        # "PartDesign_Pocket"
+        "PartDesign_Pad",
+        "PartDesign_Pocket"
     ]
 
     def GetClassName(self):
