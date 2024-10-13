@@ -69,3 +69,25 @@ For more informations, follow the [tutorial](docs/tutorial.md)
 
 Vivien HENRY
 vivien.henry@inductivebrain.fr
+
+
+## Credits
+
+This workbench is based on [MetalWB](https://framagit.org/Veloma/freecad_metal_workbench)
+
+Special thanks to:
+
+- Quentin Plisson
+- rockn
+- Jonathan Wiedemann
+- Vincent B
+
+And others people that I don't know but they should be in this [thread](https://forum.freecad.org/viewtopic.php?style=5&t=72389)
+
+
+## Changelog
+
+- V0.1.0
+  - Porting code from MetalWB
+  - Improving UI
+  - Split Corners into EndTrim and EndMiter
