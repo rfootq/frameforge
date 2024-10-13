@@ -17,18 +17,12 @@ class FrameForge(Gui.Workbench):
     toolbox_drawing = [
         "Sketcher_NewSketch",
         "FrameForge_ParametricLine"
-
-        # "MetalWB_SplitCurves",
-        # "MetalWB_Discretize"
     ]
 
     toolbox_frameforge = [
         "FrameForge_CreateProfiles",
         "FrameForge_TrimProfiles",
         "FrameForge_EndMiter"
-
-        # "MetalWB_Trim",
-        # "OverlapDetect",
     ]
 
     toolbox_part = [
