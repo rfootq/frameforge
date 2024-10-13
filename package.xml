@@ -3,7 +3,7 @@
 
   <name>FrameForge</name>
 
-  <description>Frameforge helps designing beams and frames, with cut, mitter joins and so on</description>
+  <description>FrameForge is dedicated for creating Frames and Beams, and apply operations (miter cuts, trim cuts) on theses profiles.</description>
 
   <version>0.1.0</version>
 
