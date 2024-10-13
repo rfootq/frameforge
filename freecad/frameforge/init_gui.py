@@ -29,17 +29,16 @@ class FrameForge(Gui.Workbench):
 
         # "MetalWB_Trim",
         # "OverlapDetect",
-        # "MetalWB_Corner",
     ]
 
     toolbox_part = [
         "Part_Fuse",
-        "Part_Cut"
+        "Part_Cut",
 
-        # "PartDesign_Body",
+        "PartDesign_Body",
 
-        # "PartDesign_Pad",
-        # "PartDesign_Pocket"
+        "PartDesign_Pad",
+        "PartDesign_Pocket"
     ]
 
     def GetClassName(self):
