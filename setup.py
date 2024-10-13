@@ -6,7 +6,7 @@ version_path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
 with open(version_path) as fp:
     exec(fp.read())
 
-setup(name='freecad.frameforge',
+setup(name='frameforge',
       version=str(__version__),
       packages=['freecad',
                 'freecad.frameforge'],
@@ -14,5 +14,4 @@ setup(name='freecad.frameforge',
       maintainer_email="vivien.henry@inductivebrain.fr",
       url="https://github.com/lukh/frameforge",
       description="Frameforge helps designing beams and frames, with cut, mitter joins and so on",
-      install_requires=['numpy',],
       include_package_data=True)
