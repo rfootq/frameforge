@@ -16,7 +16,7 @@ class FrameForge(Gui.Workbench):
 
     toolbox_drawing = [
         "Sketcher_NewSketch",
-        "FrameForge_ParametricLine",
+        "FrameForge_ParametricLine"
 
         # "MetalWB_SplitCurves",
         # "MetalWB_Discretize"
@@ -34,7 +34,7 @@ class FrameForge(Gui.Workbench):
 
     toolbox_part = [
         "Part_Fuse",
-        "Part_Cut",
+        "Part_Cut"
 
         # "PartDesign_Body",
 
