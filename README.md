@@ -3,6 +3,14 @@
 Frameforge helps designing beams and frames, with cut, mitter joins and so on
 
 
+## Prerequisite
+
+- FreeCAD 
+  - 1.0
+  - 0.21
+  - Should work with other
+
+No other packages
 
 ## Quick Start
 
@@ -30,7 +38,7 @@ For a start, we are going to create a simple frame.
 
 ### Create the frame
 
-1. Lauch the Profile tool.
+1. Launch the Profile tool.
 
 ![profile](docs/images/10-profiles.png)
 
@@ -60,7 +68,7 @@ You can change the size just below the family, the tool has a lot of predefined 
 **And voila ! You have your first frame !**
 
 
-For more informations, follow the [tutorial](docs/tutorial.md)
+For more information, follow the [tutorial](docs/tutorial.md)
 
 
 
@@ -91,3 +99,9 @@ And others people that I don't know but they should be in this [thread](https://
   - Porting code from MetalWB
   - Improving UI
   - Split Corners into EndTrim and EndMiter
+
+
+## Licence: 
+
+FrameForge is licensed under the [GPLv3](LICENSE)
+

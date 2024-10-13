@@ -28,7 +28,7 @@ class Profile:
         obj.addProperty("App::PropertyFloat", "RadiusLarge", "Profile", "Large radius").RadiusLarge = init_r1
         obj.addProperty("App::PropertyFloat", "RadiusSmall", "Profile", "Small radius").RadiusSmall = init_r2
         obj.addProperty("App::PropertyBool", "MakeFillet", "Profile",
-                        "Wheter to draw the fillets or not").MakeFillet = init_mf
+                        "Whether to draw the fillets or not").MakeFillet = init_mf
 
         if not bevels_combined:
             obj.addProperty("App::PropertyFloat", "BevelStartCut1", "Profile",
