@@ -3,6 +3,14 @@
 Frameforge helps designing beams and frames, with cut, mitter joins and so on
 
 
+## Prerequisite
+
+- FreeCAD 
+  - 1.0
+  - 0.21
+  - Should work with other
+
+No other packages
 
 ## Quick Start
 
@@ -91,3 +99,9 @@ And others people that I don't know but they should be in this [thread](https://
   - Porting code from MetalWB
   - Improving UI
   - Split Corners into EndTrim and EndMiter
+
+
+## Licence: 
+
+FrameForge is licensed under the [GPLv3](LICENSE)
+
