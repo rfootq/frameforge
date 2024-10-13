@@ -2,7 +2,7 @@
 
 # FrameForge Tutorial
 
-FrameForge is dedicated for creating Frames and Beams, and apply operations (miter cuts, trim cuts) on theses profiles.
+FrameForge is dedicated for creating Frames and Beams, and apply operations (miter cuts, trim cuts) on these profiles.
 
 ## Create the skeleton
 
@@ -27,7 +27,7 @@ For a start, we are going to create a simple frame.
 
 ## Create the frame
 
-1. Lauch the Profile tool.
+1. Launch the Profile tool.
 
 ![profile](images/10-profiles.png)
 
@@ -61,9 +61,9 @@ You can change the size just below the family, the tool has a lot of predefined 
 
 We can build more complexe shapes, and there are severals ways of doing it.
 
-### More Sketchs !
+### More Sketches !
 
-We can add more sketchs into our project:
+We can add more sketches into our project:
 
 1. Create a new Sketch
 2. Select the same orientation as the previous one (XY)
@@ -84,22 +84,22 @@ You can therefore use Create Profile Command again to create another square fram
 
 ### Parametric Line
 
-You can create parametrics lines for joining two vertexes (points), theses lines can be used with Warehouse Profile as well...
+You can create parametrics lines for joining two vertices (points), these lines can be used with Warehouse Profile as well...
 
 1. one can hide profiles objects with [Space Bar] (it allows to see the sketches)
 
 ![Hide profile](images/22-hide-profiles.png)
 
-2. Selects vertexes
+2. Selects vertices
 
-![Select Vertexes](images/23-select-vertexes.png)
+![Select Vertices](images/23-select-vertexes.png)
 
 
 3. Create Parametric Line
 
 ![Create parametric line](images/24-create-parametric-line.png)
 
-![alt text](images/25-parametric-line.png)
+![Parametric Line](images/25-parametric-line.png)
 
 
 You can therefore use Create profile again to create the four vertical beams !
@@ -107,13 +107,13 @@ You can therefore use Create profile again to create the four vertical beams !
 1. Open Create Profile, select the profile you want
 2. Select the Parametric lines, click OK.
 
-![alt text](images/26-cube-done.png)
+![Cube Done](images/26-cube-done.png)
 
 
 
-### More Sketchs / Part2 !
+### More Sketches / Part2 !
 
-There is another ways to add sketchs, that allows to do more complicated stuff...
+There is another ways to add sketches, that allows to do more complicated stuff...
 
 Sometime you want add a sketch to a specific place, and link it to another sketch. (If you modify the first Sketch, then the second will follow, hopefully)
 
@@ -125,16 +125,16 @@ We are going to "Map" the sketch to something else.
 
 I added a circle to the sketch so you can see where it is.. (just for reference !)
 
-![alt text](images/30-mapmode-sketch.png)
+![Map Mode Sketch](images/30-mapmode-sketch.png)
 
 2. Click on the map mode property:
 
-![alt text](images/31-mapmode.png)
+![Map mode](images/31-mapmode.png)
 
-![alt text](images/32-mapmode-dialog.png)
+![Map Mode dialog](images/32-mapmode-dialog.png)
 
 
-You can change the map mode, selecting faces, vertexes and edges...
+You can change the map mode, selecting faces, vertices and edges...
 
 ![alt text](images/33-mapmode.png)
 
@@ -244,7 +244,7 @@ I find the tree view messy. Really messy.
 
 ### Part Container
 
-I often use Part container for grouping profiles, sketchs, etc.
+I often use Part container for grouping profiles, sketches, etc.
 
 ![alt text](images/70-part-container.png)
 
@@ -269,7 +269,7 @@ It allows to group objects.
 
 ## Using profiles in Part Design... ie, making holes !
 
-To use all of theses profiles in PartDesign, for instance, to make holes... in it.. !
+To use all of these profiles in PartDesign, for instance, to make holes... in it.. !
 
 you need to use a fusion of the profile, and create a body...
 

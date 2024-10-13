@@ -127,7 +127,7 @@ class CreateTrimmedProfileTaskPanel():
 
 
     def open(self):
-        App.Console.PrintMessage(translate("frameforge", "Opening Create Trimed Profile\n"))
+        App.Console.PrintMessage(translate("frameforge", "Opening Create Trimmed Profile\n"))
         App.ActiveDocument.openTransaction("Update Trim")
 
 
@@ -155,7 +155,7 @@ class CreateTrimmedProfileTaskPanel():
 
 
     def accept(self):
-        App.Console.PrintMessage(translate("frameforge", "Accepting Create Trimed Profile\n"))
+        App.Console.PrintMessage(translate("frameforge", "Accepting Create Trimmed Profile\n"))
 
         param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
         param.SetString("Default Cut Type", self.fp.CutType)
