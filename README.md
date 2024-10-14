@@ -85,15 +85,18 @@ This workbench is based on [MetalWB](https://framagit.org/Veloma/freecad_metal_w
 
 Special thanks to:
 
+- Vincent B
 - Quentin Plisson
 - rockn
 - Jonathan Wiedemann
-- Vincent B
 
 And others people that I don't know but they should be in this [thread](https://forum.freecad.org/viewtopic.php?style=5&t=72389)
 
 
 ## Changelog
+
+- V0.1.1
+  - remove f-string with quote and double quote
 
 - V0.1.0
   - Porting code from MetalWB
