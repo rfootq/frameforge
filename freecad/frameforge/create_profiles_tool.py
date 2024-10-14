@@ -179,9 +179,11 @@ class CreateProfileTaskPanel():
         for sketch in selection_list:
             edges = sketch.SubElementNames
             for i, edge in enumerate(edges):
-                name = f"Profile_{self.form.combo_family.currentText().replace(' ', '_')}_{self.form.combo_size.currentText() if self.form.cb_size_in_name.isChecked() else ''}"
+                p_name = "Profile_" + self.form.combo_family.currentText().replace(" ", "_")
+                if self.form.cb_size_in_name.isChecked():
+                    p_name += "_" + self.form.combo_size.currentText()
 
-                self.make_profile(sketch, edge, name)
+                self.make_profile(sketch, edge, p_name)
         
 
     def make_profile(self, sketch, edge, name):
