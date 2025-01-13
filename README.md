@@ -95,6 +95,9 @@ And others people that I don't know but they should be in this [thread](https://
 
 ## Changelog
 
+- V0.1.2
+  - Fix recursive import
+
 - V0.1.1
   - remove f-string with quote and double quote
 
