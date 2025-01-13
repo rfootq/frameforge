@@ -686,18 +686,21 @@ class Profile:
 
             p = Part.Face(wire1)
 
-        if self.fam == "Round bar" or self.fam == "Pipe":
+        if self.fam == "Round Bar":
+            c = vec(H / 2 + w, H / 2 + h, 0)
+            A1 = Part.makeCircle(H / 2, c, d, 0, 360)
+            wire1 = Part.Wire([A1])
+            p = Part.Face(wire1)
+
+        if self.fam == "Pipe":
             c = vec(H / 2 + w, H / 2 + h, 0)
             A1 = Part.makeCircle(H / 2, c, d, 0, 360)
             A2 = Part.makeCircle((H - TW) / 2, c, d, 0, 360)
             wire1 = Part.Wire([A1])
             wire2 = Part.Wire([A2])
-            if TW:
-                p1 = Part.Face(wire1)
-                p2 = Part.Face(wire2)
-                p = p1.cut(p2)
-            else:
-                p = Part.Face(wire1)
+            p1 = Part.Face(wire1)
+            p2 = Part.Face(wire2)
+            p = p1.cut(p2)
 
         if L:
             ProfileFull = p.extrude(vec(0, 0, L))

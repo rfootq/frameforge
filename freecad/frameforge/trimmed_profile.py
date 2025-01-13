@@ -9,10 +9,11 @@ import FreeCAD as App
 import Part, ArchCommands
 import BOPTools.SplitAPI
 
+import freecad.frameforge
+
 from freecad.frameforge.translate_utils import translate
 from freecad.frameforge import PROFILESPATH, PROFILEIMAGES_PATH, ICONPATH, UIPATH
 
-from freecad.frameforge import create_trimmed_profiles_tool
 
 class TrimmedProfile:
     def __init__(self, obj):
@@ -237,7 +238,7 @@ class ViewProviderTrimmedProfile:
         if mode != 0:
             return None
 
-        taskd = create_trimmed_profiles_tool.CreateTrimmedProfileTaskPanel(self.Object, mode="edition")
+        taskd = freecad.frameforge.create_trimmed_profiles_tool.CreateTrimmedProfileTaskPanel(self.Object, mode="edition")
         Gui.Control.showDialog(taskd)
         return True
 
