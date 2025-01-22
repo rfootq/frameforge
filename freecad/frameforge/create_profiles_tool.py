@@ -176,14 +176,19 @@ class CreateProfileTaskPanel():
 
     def proceed(self):
         selection_list = Gui.Selection.getSelectionEx()
-        for sketch in selection_list:
-            edges = sketch.SubElementNames
-            for i, edge in enumerate(edges):
-                p_name = "Profile_" + self.form.combo_family.currentText().replace(" ", "_")
-                if self.form.cb_size_in_name.isChecked():
-                    p_name += "_" + self.form.combo_size.currentText()
+        p_name = "Profile_" + self.form.combo_family.currentText().replace(" ", "_")
+        if self.form.cb_size_in_name.isChecked():
+            p_name += "_" + self.form.combo_size.currentText()
 
-                self.make_profile(sketch, edge, p_name)
+        if len(selection_list):
+            for sketch in selection_list:
+                edges = sketch.SubElementNames
+                for i, edge in enumerate(edges):
+                    self.make_profile(sketch, edge, p_name)
+
+        else:
+            self.make_profile(None, None, p_name)
+
         
 
     def make_profile(self, sketch, edge, name):
@@ -197,15 +202,19 @@ class CreateProfileTaskPanel():
         view_obj.DisplayMode = "Flat Lines"
 
 
-        # Tuple assignment for edge
-        feature = sketch.Object
-        link_sub = (feature, (edge))
-        obj.MapMode = "NormalToEdge"
+        if edge is not None:
+            # Tuple assignment for edge
+            feature = sketch.Object
+            link_sub = (feature, (edge))
+            obj.MapMode = "NormalToEdge"
 
-        try:
-            obj.AttachmentSupport = (feature, edge)
-        except AttributeError: # for Freecad <= 0.21 support
-            obj.Support = (feature, edge)
+            try:
+                obj.AttachmentSupport = (feature, edge)
+            except AttributeError: # for Freecad <= 0.21 support
+                obj.Support = (feature, edge)
+            
+        else:
+            link_sub = None
 
         if not self.form.cb_reverse_attachment.isChecked():
             #print("Not reverse attachment")
@@ -274,7 +283,6 @@ class CreateProfilesCommand():
         panel = CreateProfileTaskPanel()
 
         Gui.Selection.addObserver(panel)
-        Gui.Selection.addSelectionGate('SELECT Part::Feature SUBELEMENT Edge')
 
         Gui.Control.showDialog(panel)
 
