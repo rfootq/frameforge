@@ -182,7 +182,11 @@ class CreateProfileTaskPanel():
 
         if len(selection_list):
             for sketch in selection_list:
-                edges = sketch.SubElementNames
+                if len(sketch.SubElementNames) > 0:
+                    edges = sketch.SubElementNames
+                else: #use on the whole sketch
+                    edges = [f"Edge{idx + 1}" for idx, e in enumerate(sketch.Object.Shape.Edges)]
+
                 for i, edge in enumerate(edges):
                     self.make_profile(sketch, edge, p_name)
 
