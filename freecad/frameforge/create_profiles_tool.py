@@ -154,20 +154,31 @@ class CreateProfileTaskPanel():
 
 
     def accept(self):
-        App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
+        if len(Gui.Selection.getSelectionEx()) or self.form.sb_length.value() > 0:
+            App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
 
-        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
-        param.SetString("Default Profile Material", self.form.combo_material.currentText())
-        param.SetString("Default Profile Family", self.form.combo_family.currentText())
-        param.SetString("Default Profile Size", self.form.combo_size.currentText())
+            param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+            param.SetString("Default Profile Material", self.form.combo_material.currentText())
+            param.SetString("Default Profile Family", self.form.combo_family.currentText())
+            param.SetString("Default Profile Size", self.form.combo_size.currentText())
 
-        self.proceed()
-        self.clean()
+            self.proceed()
+            self.clean()
 
-        App.ActiveDocument.commitTransaction()
-        App.ActiveDocument.recompute()
+            App.ActiveDocument.commitTransaction()
+            App.ActiveDocument.recompute()
 
-        return True
+            return True
+
+        else:
+            App.Console.PrintMessage(translate("frameforge", "Not Accepting CreateProfile\nSelect Edges or set Length"))
+
+            diag = QtGui.QMessageBox(QtGui.QMessageBox.Warning, 'Create Profile', 'Select Edges or set Length to create a profile')
+            diag.setWindowModality(QtCore.Qt.ApplicationModal)
+            diag.exec_()
+        
+            return False
+
 
     def clean(self):
         Gui.Selection.removeObserver(self)
@@ -252,20 +263,28 @@ class CreateProfileTaskPanel():
         self.update_selection()
 
     def update_selection(self):
-        obj_name = ''
-        for sel in Gui.Selection.getSelectionEx():
-            selected_obj_name = sel.ObjectName
-            subs = ''
-            for sub in sel.SubElementNames:
-                subs += '{},'.format(sub)
+        if len(Gui.Selection.getSelectionEx()) > 0:
+            self.form.sb_length.setEnabled(False)
+            self.form.sb_length.setValue(0.0)
 
-            obj_name += selected_obj_name 
-            obj_name += " / "
-            obj_name += subs
-            obj_name += '\n'
+            obj_name = ''
+            for sel in Gui.Selection.getSelectionEx():
+                selected_obj_name = sel.ObjectName
+                subs = ''
+                for sub in sel.SubElementNames:
+                    subs += '{},'.format(sub)
+
+                obj_name += selected_obj_name 
+                obj_name += " / "
+                obj_name += subs
+                # obj_name += '\n'
+
+        else:
+            self.form.sb_length.setEnabled(True)
+            obj_name = 'Not Attached / Define length'
+        
 
         self.form.label_attach.setText(obj_name)
-
 
 
 
