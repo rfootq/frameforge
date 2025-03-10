@@ -187,7 +187,16 @@ class CreateProfileTaskPanel():
 
     def proceed(self):
         selection_list = Gui.Selection.getSelectionEx()
-        p_name = "Profile_" + self.form.combo_family.currentText().replace(" ", "_")
+
+        p_name = "Profile"
+        if len(selection_list) == 1 and self.form.cb_sketch_in_name.isChecked():
+            sketch_sel = selection_list[0]
+
+            p_name += "_" + sketch_sel.Object.Name
+
+        if self.form.cb_family_in_name.isChecked():
+            p_name += "_" + self.form.combo_family.currentText().replace(" ", "_")
+
         if self.form.cb_size_in_name.isChecked():
             p_name += "_" + self.form.combo_size.currentText()
 
