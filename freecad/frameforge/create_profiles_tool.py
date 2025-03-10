@@ -192,7 +192,19 @@ class CreateProfileTaskPanel():
             p_name += "_" + self.form.combo_size.currentText()
 
         if len(selection_list):
+            # create part or group and 
+            container = None
+            if self.form.rb_profiles_in_part.isChecked():
+                container = App.activeDocument().addObject('App::Part','Part')
+            # elif self.form.rb_profiles_in_group.isChecked(): # not working
+            #     container = App.activeDocument().addObject('App::DocumentObjectGroup','Group')
+
+            # creates profiles
             for sketch_sel in selection_list:
+                # move the sketch inside the container
+                if container:
+                    container.addObject(sketch_sel.Object)
+
                 if len(sketch_sel.SubElementNames) > 0:
                     edges = sketch_sel.SubElementNames
                 else: #use on the whole sketch
