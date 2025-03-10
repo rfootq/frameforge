@@ -78,6 +78,13 @@ And others people that I don't know but they should be in this [thread](https://
 
 ## Changelog
 
+* v0.1.3
+  - Fix #10, Non attached profile (move profile inside the sketch 's parent)
+  - Fix #27, Link to object go out of the allowed scope
+  - Implement #23 Allow profile creation with selection of a whole sketch
+  - Allows to create a Part to group all the Profile
+  - Profile Naming Option
+
 * v0.1.2
   - Fix recursive import
 * v0.1.1
