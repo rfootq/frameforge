@@ -207,6 +207,11 @@ class CreateProfileTaskPanel():
         obj = App.ActiveDocument.addObject("Part::FeaturePython", name)
         obj.addExtension("Part::AttachExtensionPython")
 
+        # move it to the sketch's parent if possible
+        if sketch is not None and len(sketch.Parents) > 0:
+            sk_parent = sketch.Parents[-1][0]
+            sk_parent.addObject(obj)
+
         # Create a ViewObject in current GUI
         obj.ViewObject.Proxy = 0
         view_obj = Gui.ActiveDocument.getObject(obj.Name)
