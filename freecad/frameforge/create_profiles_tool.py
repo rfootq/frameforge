@@ -154,20 +154,31 @@ class CreateProfileTaskPanel():
 
 
     def accept(self):
-        App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
+        if len(Gui.Selection.getSelectionEx()) or self.form.sb_length.value() > 0:
+            App.Console.PrintMessage(translate("frameforge", "Accepting CreateProfile\n"))
 
-        param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
-        param.SetString("Default Profile Material", self.form.combo_material.currentText())
-        param.SetString("Default Profile Family", self.form.combo_family.currentText())
-        param.SetString("Default Profile Size", self.form.combo_size.currentText())
+            param = App.ParamGet("User parameter:BaseApp/Preferences/Frameforge")
+            param.SetString("Default Profile Material", self.form.combo_material.currentText())
+            param.SetString("Default Profile Family", self.form.combo_family.currentText())
+            param.SetString("Default Profile Size", self.form.combo_size.currentText())
 
-        self.proceed()
-        self.clean()
+            self.proceed()
+            self.clean()
 
-        App.ActiveDocument.commitTransaction()
-        App.ActiveDocument.recompute()
+            App.ActiveDocument.commitTransaction()
+            App.ActiveDocument.recompute()
 
-        return True
+            return True
+
+        else:
+            App.Console.PrintMessage(translate("frameforge", "Not Accepting CreateProfile\nSelect Edges or set Length"))
+
+            diag = QtGui.QMessageBox(QtGui.QMessageBox.Warning, 'Create Profile', 'Select Edges or set Length to create a profile')
+            diag.setWindowModality(QtCore.Qt.ApplicationModal)
+            diag.exec_()
+        
+            return False
+
 
     def clean(self):
         Gui.Selection.removeObserver(self)
@@ -176,14 +187,44 @@ class CreateProfileTaskPanel():
 
     def proceed(self):
         selection_list = Gui.Selection.getSelectionEx()
-        for sketch in selection_list:
-            edges = sketch.SubElementNames
-            for i, edge in enumerate(edges):
-                p_name = "Profile_" + self.form.combo_family.currentText().replace(" ", "_")
-                if self.form.cb_size_in_name.isChecked():
-                    p_name += "_" + self.form.combo_size.currentText()
 
-                self.make_profile(sketch, edge, p_name)
+        p_name = "Profile"
+        if len(selection_list) == 1 and self.form.cb_sketch_in_name.isChecked():
+            sketch_sel = selection_list[0]
+
+            p_name += "_" + sketch_sel.Object.Name
+
+        if self.form.cb_family_in_name.isChecked():
+            p_name += "_" + self.form.combo_family.currentText().replace(" ", "_")
+
+        if self.form.cb_size_in_name.isChecked():
+            p_name += "_" + self.form.combo_size.currentText()
+
+        if len(selection_list):
+            # create part or group and 
+            container = None
+            if self.form.rb_profiles_in_part.isChecked():
+                container = App.activeDocument().addObject('App::Part','Part')
+            # elif self.form.rb_profiles_in_group.isChecked(): # not working
+            #     container = App.activeDocument().addObject('App::DocumentObjectGroup','Group')
+
+            # creates profiles
+            for sketch_sel in selection_list:
+                # move the sketch inside the container
+                if container:
+                    container.addObject(sketch_sel.Object)
+
+                if len(sketch_sel.SubElementNames) > 0:
+                    edges = sketch_sel.SubElementNames
+                else: #use on the whole sketch
+                    edges = [f"Edge{idx + 1}" for idx, e in enumerate(sketch_sel.Object.Shape.Edges)]
+
+                for i, edge in enumerate(edges):
+                    self.make_profile(sketch_sel.Object, edge, p_name)
+
+        else:
+            self.make_profile(None, None, p_name)
+
         
 
     def make_profile(self, sketch, edge, name):
@@ -191,21 +232,30 @@ class CreateProfileTaskPanel():
         obj = App.ActiveDocument.addObject("Part::FeaturePython", name)
         obj.addExtension("Part::AttachExtensionPython")
 
+        # move it to the sketch's parent if possible
+        if sketch is not None and len(sketch.Parents) > 0:
+            sk_parent = sketch.Parents[-1][0]
+            sk_parent.addObject(obj)
+
         # Create a ViewObject in current GUI
         obj.ViewObject.Proxy = 0
         view_obj = Gui.ActiveDocument.getObject(obj.Name)
         view_obj.DisplayMode = "Flat Lines"
 
 
-        # Tuple assignment for edge
-        feature = sketch.Object
-        link_sub = (feature, (edge))
-        obj.MapMode = "NormalToEdge"
+        if sketch is not None and edge is not None:
+            # Tuple assignment for edge
+            feature = sketch
+            link_sub = (feature, (edge))
+            obj.MapMode = "NormalToEdge"
 
-        try:
-            obj.AttachmentSupport = (feature, edge)
-        except AttributeError: # for Freecad <= 0.21 support
-            obj.Support = (feature, edge)
+            try:
+                obj.AttachmentSupport = (feature, edge)
+            except AttributeError: # for Freecad <= 0.21 support
+                obj.Support = (feature, edge)
+            
+        else:
+            link_sub = None
 
         if not self.form.cb_reverse_attachment.isChecked():
             #print("Not reverse attachment")
@@ -243,20 +293,28 @@ class CreateProfileTaskPanel():
         self.update_selection()
 
     def update_selection(self):
-        obj_name = ''
-        for sel in Gui.Selection.getSelectionEx():
-            selected_obj_name = sel.ObjectName
-            subs = ''
-            for sub in sel.SubElementNames:
-                subs += '{},'.format(sub)
+        if len(Gui.Selection.getSelectionEx()) > 0:
+            self.form.sb_length.setEnabled(False)
+            self.form.sb_length.setValue(0.0)
 
-            obj_name += selected_obj_name 
-            obj_name += " / "
-            obj_name += subs
-            obj_name += '\n'
+            obj_name = ''
+            for sel in Gui.Selection.getSelectionEx():
+                selected_obj_name = sel.ObjectName
+                subs = ''
+                for sub in sel.SubElementNames:
+                    subs += '{},'.format(sub)
+
+                obj_name += selected_obj_name 
+                obj_name += " / "
+                obj_name += subs
+                # obj_name += '\n'
+
+        else:
+            self.form.sb_length.setEnabled(True)
+            obj_name = 'Not Attached / Define length'
+        
 
         self.form.label_attach.setText(obj_name)
-
 
 
 
@@ -274,7 +332,6 @@ class CreateProfilesCommand():
         panel = CreateProfileTaskPanel()
 
         Gui.Selection.addObserver(panel)
-        Gui.Selection.addSelectionGate('SELECT Part::Feature SUBELEMENT Edge')
 
         Gui.Control.showDialog(panel)
 
