@@ -192,10 +192,10 @@ class CreateProfileTaskPanel():
             p_name += "_" + self.form.combo_size.currentText()
 
         if len(selection_list):
-            for sketch in selection_list:
+            for sketch_sel in selection_list:
                 edges = sketch.SubElementNames
                 for i, edge in enumerate(edges):
-                    self.make_profile(sketch, edge, p_name)
+                    self.make_profile(sketch_sel.Object, edge, p_name)
 
         else:
             self.make_profile(None, None, p_name)
@@ -213,9 +213,9 @@ class CreateProfileTaskPanel():
         view_obj.DisplayMode = "Flat Lines"
 
 
-        if edge is not None:
+        if sketch is not None and edge is not None:
             # Tuple assignment for edge
-            feature = sketch.Object
+            feature = sketch
             link_sub = (feature, (edge))
             obj.MapMode = "NormalToEdge"
 
