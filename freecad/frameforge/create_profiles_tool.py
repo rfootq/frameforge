@@ -192,11 +192,11 @@ class CreateProfileTaskPanel():
             p_name += "_" + self.form.combo_size.currentText()
 
         if len(selection_list):
-            for sketch in selection_list:
-                if len(sketch.SubElementNames) > 0:
-                    edges = sketch.SubElementNames
+            for sketch_sel in selection_list:
+                if len(sketch_sel.SubElementNames) > 0:
+                    edges = sketch_sel.SubElementNames
                 else: #use on the whole sketch
-                    edges = [f"Edge{idx + 1}" for idx, e in enumerate(sketch.Object.Shape.Edges)]
+                    edges = [f"Edge{idx + 1}" for idx, e in enumerate(sketch_sel.Object.Shape.Edges)]
 
                 for i, edge in enumerate(edges):
                     self.make_profile(sketch_sel.Object, edge, p_name)
