@@ -187,12 +187,33 @@ class CreateProfileTaskPanel():
 
     def proceed(self):
         selection_list = Gui.Selection.getSelectionEx()
-        p_name = "Profile_" + self.form.combo_family.currentText().replace(" ", "_")
+
+        p_name = "Profile"
+        if len(selection_list) == 1 and self.form.cb_sketch_in_name.isChecked():
+            sketch_sel = selection_list[0]
+
+            p_name += "_" + sketch_sel.Object.Name
+
+        if self.form.cb_family_in_name.isChecked():
+            p_name += "_" + self.form.combo_family.currentText().replace(" ", "_")
+
         if self.form.cb_size_in_name.isChecked():
             p_name += "_" + self.form.combo_size.currentText()
 
         if len(selection_list):
+            # create part or group and 
+            container = None
+            if self.form.rb_profiles_in_part.isChecked():
+                container = App.activeDocument().addObject('App::Part','Part')
+            # elif self.form.rb_profiles_in_group.isChecked(): # not working
+            #     container = App.activeDocument().addObject('App::DocumentObjectGroup','Group')
+
+            # creates profiles
             for sketch_sel in selection_list:
+                # move the sketch inside the container
+                if container:
+                    container.addObject(sketch_sel.Object)
+
                 if len(sketch_sel.SubElementNames) > 0:
                     edges = sketch_sel.SubElementNames
                 else: #use on the whole sketch
