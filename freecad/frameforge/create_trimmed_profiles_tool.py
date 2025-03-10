@@ -70,8 +70,12 @@ class CreateTrimmedProfileTaskPanel():
 
     def set_trimmed_body(self):
         if len(Gui.Selection.getSelectionEx()) == 1:
-            App.Console.PrintMessage(translate("frameforge", f"Set Trimmed body: {Gui.Selection.getSelectionEx()[0].Object.Name}\n"))
-            self.fp.TrimmedBody = Gui.Selection.getSelectionEx()[0].Object
+            trimmed_body = Gui.Selection.getSelectionEx()[0].Object
+            App.Console.PrintMessage(translate("frameforge", f"Set Trimmed body: {trimmed_body.Name}\n"))
+            self.fp.TrimmedBody = trimmed_body
+
+            if len(trimmed_body.Parents) > 0:
+                trimmed_body.Parents[-1][0].addObject(self.fp)
 
         self.update_view_and_model()
 
@@ -225,6 +229,10 @@ class TrimProfileCommand():
         doc = App.ActiveDocument
 
         trimmed_profile = doc.addObject("Part::FeaturePython","TrimmedProfile")
+
+        if trimmedBody is not None and len(trimmedBody.Parents) > 0:
+            trimmedBody.Parents[-1][0].addObject(trimmed_profile)
+
         TrimmedProfile(trimmed_profile)
 
         ViewProviderTrimmedProfile(trimmed_profile.ViewObject)

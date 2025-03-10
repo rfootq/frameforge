@@ -58,6 +58,10 @@ class CreateEndMiterCommand():
         doc = App.ActiveDocument
 
         trimmed_profile = doc.addObject("Part::FeaturePython","TrimmedProfile")
+
+        if trimmedBody is not None and len(trimmedBody.Parents) > 0:
+            trimmedBody.Parents[-1][0].addObject(trimmed_profile)
+
         TrimmedProfile(trimmed_profile)
         
         ViewProviderTrimmedProfile(trimmed_profile.ViewObject)
